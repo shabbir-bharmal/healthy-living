@@ -1,14 +1,14 @@
 <!doctype html>
 <html>
 <head>
-    <title>vue.js textbox component</title>
+    <title>Healthy living, healthy eating</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
 </head>
 <body>
-<h1>Autocomplete Vue.js textbox component</h1>
+<h1>Healthy living, healthy eating</h1>
 <div id="app">
     <div class="container">
         <div class="row">
@@ -17,6 +17,7 @@
                         :place-holder-text="placeHolderInputText"
                         :result-items="autoCompleteResult"
                         :on-key-up="onKeyUpAutoCompleteEvent"
+                        :on-focus="onKeyUpAutoCompleteEvent"
                         :on-selected="onSelectedAutoCompleteEvent"
                         :auto-complete-progress="autoCompleteProgress"
                         :item-text="autoCompleteText"
@@ -76,11 +77,13 @@
         { id: 1, name: 'Coke', calories: '20', protein: '0.1', fat: '0', carbohydrate: '10', sugar: '9', ingredients: ['Sugar', 'Caffeine', 'Caramel color'], image: 'coke.png'},
         { id: 2, name: 'Fries', calories: '266', protein: '11', fat: '10', carbohydrate: '33', sugar: '3.6', ingredients: ['Potatoes', 'Vegetable oil', 'Eggs'], image: 'fries.jpg'},
         { id: 3, name: 'Pizza', calories: '312', protein: '3.4', fat: '15', carbohydrate: '41', sugar: '0.3', ingredients: ['Cheese', 'Dough', 'Mozzarella'], image: 'pizza.jpg'},
+        { id: 4, name: 'Burger', calories: '295', protein: '17', fat: '14', carbohydrate: '24', sugar: '4.2', ingredients: ['Beans', 'Nuts', 'Seeds'], image: 'burger.png'},
         ];
     var autoCompleteComponent = Vue.component('autocomplete', {
         props: {
             placeHolderText: String,
             onKeyUp: Function,
+            onFocus: Function,
             onSelected: Function,
             resultItems: Array,
             autoCompleteProgress: Boolean,
@@ -96,7 +99,7 @@
 
         template: `
 		<div class="autocomplete">
-			<input type="text" :placeholder="placeHolderText" v-model="keywordSearch" class="form-textinput" :class="{ 'loading-circle' : (keywordSearch.length > 2), 'hide-loading-circle': resultItems.length > 0 || resultItems.length == 0 && !autoCompleteProgress  }" @keyup="!autoCompleteProgress ? onKeyUp(keywordSearch) : ''"/>
+			<input type="text" :placeholder="placeHolderText" v-model="keywordSearch" class="form-textinput" :class="{ 'loading-circle' : (keywordSearch.length > 2), 'hide-loading-circle': resultItems.length > 0 || resultItems.length == 0 && !autoCompleteProgress  }" @keyup="!autoCompleteProgress ? onKeyUp(keywordSearch) : ''" @focus="onFocus(keywordSearch)" />
 			<ul class="autocomplete-results" v-if="resultItems.length > 0">
 				<li class="autocomplete-result" v-for="(item,i) in resultItems" :key="i" @click="keywordSearch='';onSelected(item[itemId])">
 					{{ item[itemText] }}
@@ -109,7 +112,7 @@
     var app = new Vue({
         el: '#app',
         data: {
-            placeHolderInputText: 'Enter food name',
+            placeHolderInputText: 'Enter food name (E.g Coke, Pizza)',
             autoCompleteResult: [],
             autoCompleteProgress: false,
             autoCompleteText: "name",
@@ -132,19 +135,14 @@
                 //reset
                 this.autoCompleteResult = [];
                 this.autoCompleteProgress = false;
-                if(keywordEntered.length > 0){
-                    var newData = [];
-                    suggestions.forEach(function(item, index){
-                        if(item.name.toLowerCase().indexOf(keywordEntered.toLowerCase()) >= 0){
-                            newData.push(item);
-                        }
-                    });
-                    this.autoCompleteResult = newData;
-                    this.autoCompleteProgress = false;
-                }else{
-                    this.autoCompleteProgress = false;
-                    this.autoCompleteResult = [];
-                }
+                  var newData = [];
+                  suggestions.forEach(function(item, index){
+                    if(item.name.toLowerCase().indexOf(keywordEntered.toLowerCase()) >= 0){
+                      newData.push(item);
+                    }
+                  });
+                  this.autoCompleteResult = newData;
+                  this.autoCompleteProgress = false;
             },
         }
     })
