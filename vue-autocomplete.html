@@ -1,0 +1,153 @@
+<!doctype html>
+<html>
+<head>
+    <title>vue.js textbox component</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+    <style>
+        /*********** AUTO COMPLETE ************/
+        .loading-circle {
+            background-color: #ffffff;
+            background-image: url("/assets/css/images/loading.gif");
+            background-size: 16px 16px;
+            background-position: right center;
+            background-repeat: no-repeat;
+        }
+
+        .hide-loading-circle {
+            background: none;
+        }
+
+        .form-textinput{
+            padding:8px 10px;
+            border-radius:5px;
+            border:solid 1px #ccc;
+        }
+
+        .autocomplete {
+            position: relative;
+        }
+
+        .autocomplete-results {
+            padding: 0;
+            margin: 0;
+            border: 1px solid #eeeeee;
+            height: 120px;
+            overflow: auto;
+            background-color:#fdf8f3;
+            border-radius:5px;
+        }
+
+        .autocomplete-result {
+            list-style: none;
+            text-align: left;
+            padding: 4px 10px;
+            cursor: pointer;
+        }
+
+        .autocomplete-result:hover {
+            background-color: #4AAE9B;
+            color: white;
+        }
+        /*********** END AUTO COMPLETE ************/
+    </style>
+</head>
+<body>
+<h1>Autocomplete Vue.js textbox component</h1>
+<div id="app">
+    <autocomplete
+            :place-holder-text="placeHolderInputText"
+            :result-items="autoCompleteResult"
+            :on-key-up="onKeyUpAutoCompleteEvent"
+            :on-selected="onSelectedAutoCompleteEvent"
+            :auto-complete-progress="autoCompleteProgress"
+            :item-text="autoCompleteText"
+            :item-id="autoCompleteFieldId">
+    </autocomplete>
+
+    <!--<div class="wrapper" v-if="seen">
+        <div class="card">
+            &lt;!&ndash;<img/>&ndash;&gt;
+            {{ itemName }}
+        </div>
+    </div>-->
+
+</div>
+
+<script>
+    const suggestions = [
+        { id: 1, name: 'Coke', calorie: '20', ingredients: {}, image: 'coke.png'},
+        { id: 2, name: 'Fries', calorie: '30', ingredients: {}, image: 'fries.jpg'},
+        { id: 3, name: 'Pizza', calorie: '50', ingredients: {}, image: 'pizza.jpg'},
+        ];
+    var autoCompleteComponent = Vue.component('autocomplete', {
+        props: {
+            placeHolderText: String,
+            onKeyUp: Function,
+            onSelected: Function,
+            resultItems: Array,
+            autoCompleteProgress: Boolean,
+            itemText: String,
+            itemId: String
+        },
+
+        data() {
+            return {
+                keywordSearch: ''
+            }
+        },
+
+        template: `
+		<div class="autocomplete">
+			<input type="text" :placeholder="placeHolderText" v-model="keywordSearch" class="form-textinput" :class="{ 'loading-circle' : (keywordSearch.length > 2), 'hide-loading-circle': resultItems.length > 0 || resultItems.length == 0 && !autoCompleteProgress  }" @keyup="!autoCompleteProgress ? onKeyUp(keywordSearch) : ''"/>
+			<ul class="autocomplete-results" v-if="resultItems.length > 0">
+				<li class="autocomplete-result" v-for="(item,i) in resultItems" :key="i" @click="keywordSearch='';onSelected(item[itemId], item[itemText])">
+					{{ item[itemText] }}
+				</li>
+			</ul>
+		</div>
+	`
+    });
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            placeHolderInputText: 'Enter food name',
+            autoCompleteResult: [],
+            autoCompleteProgress: false,
+            autoCompleteText: "name",
+            autoCompleteFieldId: "id",
+            seen: false,
+            itemName: '',
+            itemSrc: ''
+        },
+        methods: {
+            onSelectedAutoCompleteEvent(id, text){
+                this.autoCompleteProgress = false;
+                this.autoCompleteResult = [];
+                this.itemName = text;
+                this.seen = true;
+                //alert("You have selected " + id + ": " + text);
+            },
+
+            onKeyUpAutoCompleteEvent(keywordEntered){
+                //reset
+                this.autoCompleteResult = [];
+                this.autoCompleteProgress = false;
+                if(keywordEntered.length > 2){
+                    var newData = [];
+                    suggestions.forEach(function(item, index){
+                        if(item.name.toLowerCase().indexOf(keywordEntered.toLowerCase()) >= 0){
+                            newData.push(item);
+                        }
+                    });
+                    this.autoCompleteResult = newData;
+                    this.autoCompleteProgress = false;
+                }else{
+                    this.autoCompleteProgress = false;
+                    this.autoCompleteResult = [];
+                }
+            },
+        }
+    })
+</script>
