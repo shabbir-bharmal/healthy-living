@@ -28,6 +28,9 @@
     overflow: auto;
     background-color:#fdf8f3;
     border-radius:5px;
+    width: 100%;
+    position: absolute;
+    z-index: 10;
 }
 
 .autocomplete-result {
@@ -96,9 +99,10 @@ div#app .wrapper {
 }
 div#app .card {
     box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px;
-    max-width: 124px;
+
     margin: 12px;
     transition: 0.15s all ease-in-out;
+    display: inline-block;
 }
 div#app .card:hover {
     transform: scale(1.1);
@@ -129,4 +133,7 @@ div#app .box {
     width: 100px;
     height: 100px;
     border: 1px solid rgba(0, 0, 0, .12);
+}
+.hide-loading-circle {
+    width: 260px;
 }
