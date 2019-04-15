@@ -1,2 +1,29 @@
-# healthy-living
-This application is catered towards invoking healthy habits in this world where rising levels of junk food, fast food, and unhealthy drinks are causing obesity and giving rise to many diseases in populations all across the world. 
+# vueroute
+
+## Project setup
+```
+npm install
+```
+
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Run your tests
+```
+npm run test
+```
+
+### Lints and fixes files
+```
+npm run lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
