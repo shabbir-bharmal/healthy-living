@@ -137,3 +137,35 @@ div#app .box {
 .hide-loading-circle {
     width: 260px;
 }
+
+table.comparison td {
+    text-align: center;
+}
+table.comparison th, table.comparison td {
+    padding: 10px;
+    border: 0;
+}
+
+table.comparison.table {
+    border: 0;
+    border-collapse: collapse;
+    width: auto;
+    margin: 0 auto;
+}
+
+table.comparison.table span {
+    display: table-row;
+    float: left;
+}
+
+table.comparison.table span tr:nth-child(2n) {
+    background: #eee;
+}
+
+h3 {
+    text-align: center;
+}
+table.comparison.table span th:first-child, table.comparison.table span:first-child th {
+    background: #888;
+    color: #fff;
+}
