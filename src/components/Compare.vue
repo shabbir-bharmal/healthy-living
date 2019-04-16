@@ -28,7 +28,7 @@
                             </li>
                         </ul>
                     </td>-->
-                    <td align="center"><button @click="addCard(index)">Compare</button></td>
+                    <td align="center"><button v-if="!food.buttonHidden" @click="addCard(food)">Compare</button></td>
                 </tr>
 
 
@@ -46,9 +46,13 @@
                         </tr>
                     </thead>
 
-                    <tr v-for="(v, i, count) in card">
-                        <th  class="text-left" v-if="index < 1">{{ capitalize(i) }}</th>
+                    <tr v-for="(v, i, count) in card" v-if="i != 'id' && i != 'image' && i != 'buttonHidden'">
+                        <th class="text-left" v-if="index < 1">{{ capitalize(i) }}</th>
                         <td>{{ getCompareValues(i, v) }}</td>
+                    </tr>
+                    <tr>
+                        <th v-if="index < 1 ">Action</th>
+                        <td align="center"><button @click="removeCard(card)">Remove</button></td>
                     </tr>
                 </span>
             </table>
@@ -59,10 +63,10 @@
 </template>
 <script>
     const foods = [
-        { id: 1, name: 'Coke', calories: '20', protein: '0.1', fat: '0', carbohydrate: '10', sugar: '9', ingredients: ['Sugar', 'Caffeine', 'Caramel color'], image: 'coke.png'},
-        { id: 2, name: 'Fries', calories: '266', protein: '11', fat: '10', carbohydrate: '33', sugar: '3.6', ingredients: ['Potatoes', 'Vegetable oil', 'Eggs'], image: 'fries.jpg'},
-        { id: 3, name: 'Pizza', calories: '312', protein: '3.4', fat: '15', carbohydrate: '41', sugar: '0.3', ingredients: ['Cheese', 'Dough', 'Mozzarella'], image: 'pizza.jpg'},
-        { id: 4, name: 'Burger', calories: '295', protein: '17', fat: '14', carbohydrate: '24', sugar: '4.2', ingredients: ['Beans', 'Nuts', 'Seeds'], image: 'burger.png'},
+        { id: 1, name: 'Coke', calories: '20', protein: '0.1', fat: '0', carbohydrate: '10', sugar: '9', ingredients: ['Sugar', 'Caffeine', 'Caramel color'], image: 'coke.png',buttonHidden:false},
+        { id: 2, name: 'Fries', calories: '266', protein: '11', fat: '10', carbohydrate: '33', sugar: '3.6', ingredients: ['Potatoes', 'Vegetable oil', 'Eggs'], image: 'fries.jpg',buttonHidden:false},
+        { id: 3, name: 'Pizza', calories: '312', protein: '3.4', fat: '15', carbohydrate: '41', sugar: '0.3', ingredients: ['Cheese', 'Dough', 'Mozzarella'], image: 'pizza.jpg',buttonHidden:false},
+        { id: 4, name: 'Burger', calories: '295', protein: '17', fat: '14', carbohydrate: '24', sugar: '4.2', ingredients: ['Beans', 'Nuts', 'Seeds'], image: 'burger.png',buttonHidden:false},
     ];
 
     export default {
@@ -75,10 +79,17 @@
             }
         },
         methods: {
-            addCard: function (index) {
+            addCard: function (food) {
                 this.seen = true;
-                var foodDetails = this.foods[index];
-                this.cards.push({name: foodDetails.name, calories: foodDetails.calories, protein: foodDetails.protein, carbohydrate: foodDetails.carbohydrate, sugar:foodDetails.sugar, fat: foodDetails.fat, ingredients: foodDetails.ingredients });
+                food.buttonHidden = true;
+                this.cards.push(food);
+            },
+            removeCard: function (food) {
+                food.buttonHidden = false;
+                this.cards = this.cards.filter(item => item.id !== food.id)
+              if(this.cards.length == 0) {
+                this.seen = false;
+              }
             },
             getImage(image){
                 const url = require(`../../images/`+image);
